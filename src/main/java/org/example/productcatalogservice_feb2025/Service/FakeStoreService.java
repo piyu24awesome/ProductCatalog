@@ -1,10 +1,7 @@
 package org.example.productcatalogservice_feb2025.Service;
 
-import lombok.Setter;
 import org.example.productcatalogservice_feb2025.DTO.FakeStoreProductDTO;
-import org.example.productcatalogservice_feb2025.DTO.ProductDTO;
 import org.example.productcatalogservice_feb2025.mapper.MapperUtil;
-import org.example.productcatalogservice_feb2025.models.Category;
 import org.example.productcatalogservice_feb2025.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -12,16 +9,12 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Service("thirdParty")
 public class FakeStoreService implements IProductService {
     @Autowired
     RestTemplateBuilder restTemplate;
@@ -64,6 +57,35 @@ public class FakeStoreService implements IProductService {
             return mapperUtil.mapperFromFakeStoreDTOToProductEntity(updatedProduct.getBody());
         }
         return null;
+    }
+
+    @Override
+    public Product patchProduct(long id, Product product) {
+        return updateProduct(id,product);
+    }
+
+    @Override
+    public Product addProduct(Product product) {
+        String url = "https://fakestoreapi.com/products";
+        FakeStoreProductDTO fakeStoreProductDTO = mapperUtil.mapperFromProductEntityToFakeStoreDTO(product);
+        HttpEntity<FakeStoreProductDTO> requestEntity = new HttpEntity<>(fakeStoreProductDTO);
+        ResponseEntity<FakeStoreProductDTO> responseProduct = restTemplate.build().postForEntity(url, requestEntity, FakeStoreProductDTO.class);
+        if (responseProduct.getBody() != null && responseProduct.getStatusCode().equals(HttpStatusCode.valueOf(200))) {
+            return mapperUtil.mapperFromFakeStoreDTOToProductEntity(responseProduct.getBody());
+        }
+        return null;
+    }
+
+    @Override
+    public void addProducts(List<Product> product) {
+    }
+
+
+    @Override
+    public boolean deleteProduct(long id) {
+        String url = "https://fakestoreapi.com/products/{id}";
+        restTemplate.build().delete(url, id);
+        return true;
     }
 
 
