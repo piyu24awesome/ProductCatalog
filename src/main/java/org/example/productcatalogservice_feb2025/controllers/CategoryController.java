@@ -1,14 +1,20 @@
 package org.example.productcatalogservice_feb2025.controllers;
 
+import org.example.productcatalogservice_feb2025.Service.CategoryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/category")
 public class CategoryController {
 
-    @GetMapping("/category")
-    public void getAllCategories(){
-        throw new IllegalArgumentException("Testing Category Exceptions");
+    @Autowired
+    CategoryService categoryService;
+
+    @DeleteMapping("/{id}")
+    public boolean deleteCategory(@PathVariable long id) {
+      return   categoryService.deleteCategory(id);
+
     }
-}
+ }

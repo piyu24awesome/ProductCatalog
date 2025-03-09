@@ -1,25 +1,39 @@
 package org.example.productcatalogservice_feb2025.Service;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
+import org.example.productcatalogservice_feb2025.models.Category;
 import org.example.productcatalogservice_feb2025.models.Product;
+import org.example.productcatalogservice_feb2025.repo.CategoryRepo;
 import org.example.productcatalogservice_feb2025.repo.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service("dbStore")
 public class DBStoreService implements IProductService {
     @Autowired
     ProductRepo productRepo;
+    @Autowired
+    private CategoryRepo categoryRepo;
+
 
     @Override
+    @Transactional(readOnly = true) //prevents unnecessary DB writes
     public Product getProductById(long id) {
+
 
         Optional<Product> retrieveProduct = productRepo.findById(id);
         if (retrieveProduct.isPresent()) {
+            System.out.println(retrieveProduct.get().getName());
+            System.out.println(retrieveProduct.get().getPrice());
+            System.out.println(retrieveProduct.get().getDescription());
+            System.out.println(retrieveProduct.get().getImageUrl());
+
             return retrieveProduct.get();
         } else {
             throw new RuntimeException("Product Not Found with ID : " + id);
@@ -65,14 +79,42 @@ public class DBStoreService implements IProductService {
 
     @Override
     public Product addProduct(Product product) {
+        checkIfCategoryExistsAndUpdateProductCategory(product);
         return productRepo.save(product);
+    }
+
+    private void checkIfCategoryExistsAndUpdateProductCategory(Product product) {
+        Category category = product.getCategory();
+        if (category != null) {
+            Optional<Category> categoryFromDB = categoryRepo.findByName(category.getName());
+            if (categoryFromDB.isEmpty()) {
+                //then we need to save the new category in categoryRepo and Product.
+                categoryRepo.save(category);
+            }
+            categoryFromDB.ifPresent(product::setCategory);
+        }
     }
 
     @Transactional
     @Override
     public void addProducts(List<Product> products) {
-        if(ObjectUtils.isEmpty(products)){
+        if (ObjectUtils.isEmpty(products)) {
             throw new RuntimeException("Product list is empty");
+        }
+        Map<String, Category> categoryCache = new HashMap<>();
+
+        for (Product product : products) {
+            Category category = product.getCategory();
+
+            if (category != null) {
+                // 🔍 Check if Category exists in cache or database
+                category = categoryCache.computeIfAbsent(
+                        category.getName(),
+                        name -> categoryRepo.findByName(name).orElseGet(() -> categoryRepo.save(new Category(name)))
+                );
+
+                product.setCategory(category);
+            }
         }
         productRepo.saveAll(products);
     }

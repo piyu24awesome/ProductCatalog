@@ -59,15 +59,19 @@ public class ProductController {
 
 
     @PostMapping()
-    public ResponseEntity<String> addProduct(@RequestBody ProductDTO productDTO) {
-        if (productDTO.getId() == null) {
+    public ResponseEntity<ProductDTO> addProduct(@RequestBody ProductDTO productDTO) {
+        if (productDTO.getTitle() == null) {
             throw new IllegalArgumentException("Invalid product id is input from user");
+        }
+
+        if (productDTO.getCategory() == null) {
+            throw new IllegalArgumentException("Invalid category id is input from user");
         }
         Product product = mapperUtil.mapperFromProductDTOToProductEntity(productDTO);
         Product addedProduct = productService.addProduct(product);
 
-        return ResponseEntity.ok("Product added successfully");
-       // return ResponseEntity.ok(mapperUtil.mapperFromProductToProductDTO(addedProduct));
+      //  return ResponseEntity.ok("Product added successfully");
+        return ResponseEntity.ok(mapperUtil.mapperFromProductToProductDTO(addedProduct));
     }
 
     @PostMapping("/bulk")

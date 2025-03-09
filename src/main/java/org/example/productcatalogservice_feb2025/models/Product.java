@@ -1,20 +1,29 @@
 package org.example.productcatalogservice_feb2025.models;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
-@Setter
+import org.springframework.stereotype.Component;
 @Getter
+@Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Entity
+@Table(name = "product")
 public class Product extends BaseModel {
+
+    @Column(columnDefinition = "VARCHAR(255)",nullable = false)
     String name;
+    @Column(length=10000)
     String description;
+    @Column(columnDefinition = "VARCHAR(255)")
     String imageUrl;
+    @Column(nullable = false)
     double price;
-    boolean isPrime;
-    @ManyToOne(cascade = CascadeType.ALL)
+    Boolean isPrime;
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id", nullable = false)
     Category category;
+    public Product() {}
 }
