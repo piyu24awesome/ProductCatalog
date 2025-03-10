@@ -8,6 +8,7 @@ import org.example.productcatalogservice_feb2025.models.Category;
 import org.example.productcatalogservice_feb2025.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
@@ -22,12 +23,15 @@ import java.util.List;
 @RequestMapping("/products")
 public class ProductController {
 
+
     @Qualifier("dbStore")
     @Autowired
     IProductService productService;
 
     @Autowired
     MapperUtil mapperUtil;
+
+
 
     @GetMapping()
     public List<ProductDTO> getAllProducts() {

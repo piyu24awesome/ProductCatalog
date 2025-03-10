@@ -21,10 +21,11 @@ public class FakeStoreService implements IProductService {
 
     @Autowired
     MapperUtil mapperUtil;
+    String baseUrl = "https://fakestoreapi.com/products";
 
     @Override
     public Product getProductById(long id) {
-        String url = "https://fakestoreapi.com/products/{id}";
+        String url = baseUrl + "/{id}";
         ResponseEntity<FakeStoreProductDTO> fakeStoreProductDTO = restTemplate.build().getForEntity(url, FakeStoreProductDTO.class, id);
         if (fakeStoreProductDTO.getBody() != null && fakeStoreProductDTO.getStatusCode().equals(HttpStatusCode.valueOf(200))) {
             return mapperUtil.mapperFromFakeStoreDTOToProductEntity(fakeStoreProductDTO.getBody());
@@ -35,7 +36,7 @@ public class FakeStoreService implements IProductService {
     @Override
     public List<Product> getAllProducts() {
         List<Product> products = new ArrayList<>();
-        String url = "https://fakestoreapi.com/products";
+        String url = baseUrl;
         ResponseEntity<FakeStoreProductDTO[]> listFakeStoreProductDTO = restTemplate.build().getForEntity(url, FakeStoreProductDTO[].class);
         if (listFakeStoreProductDTO.getBody() != null && listFakeStoreProductDTO.getStatusCode().equals(HttpStatusCode.valueOf(200))) {
 
@@ -49,7 +50,7 @@ public class FakeStoreService implements IProductService {
     @Override
     public Product updateProduct(long id, Product product) {
 
-        String url = "https://fakestoreapi.com/products/{id}";
+        String url = baseUrl + "/{id}";
         FakeStoreProductDTO fakeStoreProductDTO = mapperUtil.mapperFromProductEntityToFakeStoreDTO(product);
         HttpEntity<FakeStoreProductDTO> requestEntity = new HttpEntity<>(fakeStoreProductDTO);
         ResponseEntity<FakeStoreProductDTO> updatedProduct = restTemplate.build().exchange(url, HttpMethod.PUT, requestEntity, FakeStoreProductDTO.class, id);
@@ -61,12 +62,12 @@ public class FakeStoreService implements IProductService {
 
     @Override
     public Product patchProduct(long id, Product product) {
-        return updateProduct(id,product);
+        return updateProduct(id, product);
     }
 
     @Override
     public Product addProduct(Product product) {
-        String url = "https://fakestoreapi.com/products";
+        String url = baseUrl;
         FakeStoreProductDTO fakeStoreProductDTO = mapperUtil.mapperFromProductEntityToFakeStoreDTO(product);
         HttpEntity<FakeStoreProductDTO> requestEntity = new HttpEntity<>(fakeStoreProductDTO);
         ResponseEntity<FakeStoreProductDTO> responseProduct = restTemplate.build().postForEntity(url, requestEntity, FakeStoreProductDTO.class);
@@ -83,7 +84,7 @@ public class FakeStoreService implements IProductService {
 
     @Override
     public boolean deleteProduct(long id) {
-        String url = "https://fakestoreapi.com/products/{id}";
+        String url = baseUrl + "/{id}";
         restTemplate.build().delete(url, id);
         return true;
     }

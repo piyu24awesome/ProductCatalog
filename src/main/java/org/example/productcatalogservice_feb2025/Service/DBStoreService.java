@@ -29,11 +29,6 @@ public class DBStoreService implements IProductService {
 
         Optional<Product> retrieveProduct = productRepo.findById(id);
         if (retrieveProduct.isPresent()) {
-            System.out.println(retrieveProduct.get().getName());
-            System.out.println(retrieveProduct.get().getPrice());
-            System.out.println(retrieveProduct.get().getDescription());
-            System.out.println(retrieveProduct.get().getImageUrl());
-
             return retrieveProduct.get();
         } else {
             throw new RuntimeException("Product Not Found with ID : " + id);

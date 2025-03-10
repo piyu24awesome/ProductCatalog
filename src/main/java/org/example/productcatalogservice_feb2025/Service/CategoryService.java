@@ -1,8 +1,11 @@
 package org.example.productcatalogservice_feb2025.Service;
 
+import org.example.productcatalogservice_feb2025.models.Category;
 import org.example.productcatalogservice_feb2025.repo.CategoryRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class CategoryService {
@@ -17,5 +20,12 @@ public class CategoryService {
             return true;
         }
         return false;
+    }
+
+    public Category getCategory(long id) {
+       Optional<Category> category = categoryRepo.findById(id);
+
+        category.ifPresent(value -> System.out.println("******************" + value.getName()));
+        return category.orElse(null);
     }
 }

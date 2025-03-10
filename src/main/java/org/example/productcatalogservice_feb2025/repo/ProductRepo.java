@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -24,4 +25,9 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
     boolean existsById(Long aLong);
 
     List<Product> findByCategory_Id(Long categoryId);
+
+    @Query(value = "SELECT pname, pdesc FROM product WHERE id = :id", nativeQuery = true)
+    Object[] findRawProductById(@Param("id") Long id);
+
+
 }
