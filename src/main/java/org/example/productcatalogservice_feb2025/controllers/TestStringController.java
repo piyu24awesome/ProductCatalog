@@ -13,10 +13,10 @@ public class TestStringController {
 
     @GetMapping("/{id}")
     public TestString getObjectById(@PathVariable int id) {
-        TestString s= testStringService.getDataById(id);
+        TestString s = testStringService.getDataById(id);
 
         System.out.println(s.getName());
-        return testStringService.getDataById(id);
+        return s;
     }
 
     @PostMapping()
