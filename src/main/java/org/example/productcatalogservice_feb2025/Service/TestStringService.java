@@ -10,12 +10,14 @@ public class TestStringService {
     @Autowired
     TestStringRepo testStringRepo;
 
-    public TestString getDataById(int id) {
+    public TestString getDataById(Integer id) {
 
         var result = testStringRepo.findTestById(id);
         System.out.println(result);
-        System.out.println(result.size());
-        return new TestString(((Integer) result.get(0)[0]), ((String) result.get(0)[1]));
+//        System.out.println(result.size());
+//        return result.get(0);
+//        return new TestString(((Integer) result.get(0)[0]), ((String) result.get(0)[1]));
+        return null;
     }
 
     public TestString saveObject(TestString testString) {

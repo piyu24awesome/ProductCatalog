@@ -10,16 +10,15 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Entity
+@Entity(name = "test_string")
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class TestString {
 
-    @Column(name ="ID", nullable = false,  insertable = true, updatable = false)
+    @Column(name ="id", nullable = false,  insertable = true, updatable = false)
     @Id
-    private int id;
-    @Column(name="NAME", nullable = false, insertable = true, updatable = true, length = 50)
+    private Integer id;
+    @Column(name="name", nullable = false, insertable = true, updatable = true, length = 50)
     private String name;
 
     @Override
