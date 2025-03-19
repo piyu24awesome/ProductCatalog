@@ -2,7 +2,7 @@ package org.example.productcatalogservice_feb2025.Service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.productcatalogservice_feb2025.Exception.EntityNotFoundException;
-import org.example.productcatalogservice_feb2025.Exception.ProductListEmptyException;
+import org.example.productcatalogservice_feb2025.Exception.EntityListEmptyException;
 import org.springframework.context.annotation.Primary;
 import org.springframework.transaction.annotation.Transactional;
 import org.example.productcatalogservice_feb2025.models.Category;
@@ -42,7 +42,7 @@ public class DBStoreService implements ProductService {
         List<Product> products = productRepo.findAll();
         if (products.isEmpty()) {
             log.info("No products found in DB");
-            throw new ProductListEmptyException("No products found in DB");
+            throw new EntityListEmptyException("No products found in DB");
         }
         return products;
     }
@@ -97,7 +97,7 @@ public class DBStoreService implements ProductService {
     @Override
     public void addProducts(List<Product> products) {
         if (ObjectUtils.isEmpty(products)) {
-            throw new ProductListEmptyException("Product list is empty");
+            throw new EntityListEmptyException("Product list is empty");
         }
         Map<String, Category> categoryCache = new HashMap<>();
 

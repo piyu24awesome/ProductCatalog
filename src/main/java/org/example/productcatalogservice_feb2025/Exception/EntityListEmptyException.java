@@ -4,9 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.NO_CONTENT)
-public class ProductListEmptyException extends RuntimeException {
+public class EntityListEmptyException extends RuntimeException {
 
-    public ProductListEmptyException(String message) {
+    public EntityListEmptyException(String message) {
         super(message);
     }
 
