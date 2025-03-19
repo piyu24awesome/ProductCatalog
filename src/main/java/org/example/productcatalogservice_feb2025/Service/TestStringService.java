@@ -17,7 +17,7 @@ public class TestStringService {
 //        System.out.println(result.size());
 //        return result.get(0);
 //        return new TestString(((Integer) result.get(0)[0]), ((String) result.get(0)[1]));
-        return null;
+        return result;
     }
 
     public TestString saveObject(TestString testString) {

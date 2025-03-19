@@ -12,5 +12,5 @@ public interface TestStringRepo extends CrudRepository<TestString, Integer> {
     Optional<TestString> findById(Integer integer);
 
     @Query(value = "SELECT * FROM test_string WHERE id = :id", nativeQuery = true)
-    List<TestString> findTestById(@Param("id") Integer id);
+    TestString findTestById(@Param("id") Integer id);
 }
