@@ -10,14 +10,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({IllegalArgumentException.class, RuntimeException.class})
     public ResponseEntity<String> handleExceptions(Exception exception) {
-        System.out.println("in Controller Advise");
+        System.out.println("in Controller Advise 1");
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleOtherExceptions(Exception exception) {
-        System.out.println("in Controller Advise");
+        System.out.println("in Controller Advise 2");
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }
