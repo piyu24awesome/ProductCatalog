@@ -1,94 +1,57 @@
 package org.example.productcatalogservice_feb2025.Service;
 
-import org.example.productcatalogservice_feb2025.DTO.FakeStoreProductDTO;
+import org.example.productcatalogservice_feb2025.DTO.ProductDTO;
+import org.example.productcatalogservice_feb2025.client.ThirdPartyProductServiceClient;
+import org.example.productcatalogservice_feb2025.Exception.ProductNotFoundException;
 import org.example.productcatalogservice_feb2025.mapper.MapperUtil;
 import org.example.productcatalogservice_feb2025.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service("thirdParty")
-public class FakeStoreService implements IProductService {
+public class FakeStoreService implements ProductService {
     @Autowired
-    RestTemplateBuilder restTemplate;
+    ThirdPartyProductServiceClient client;
 
     @Autowired
     MapperUtil mapperUtil;
-    String baseUrl = "https://fakestoreapi.com/products";
 
     @Override
     public Product getProductById(long id) {
-        String url = baseUrl + "/{id}";
-        ResponseEntity<FakeStoreProductDTO> fakeStoreProductDTO = restTemplate.build().getForEntity(url, FakeStoreProductDTO.class, id);
-        if (fakeStoreProductDTO.getBody() != null && fakeStoreProductDTO.getStatusCode().equals(HttpStatusCode.valueOf(200))) {
-            return mapperUtil.mapperFromFakeStoreDTOToProductEntity(fakeStoreProductDTO.getBody());
-        }
-        return null;
+        return mapperUtil.mapperFromFakeStoreDTOToProductEntity(client.getProductById(id));
+
     }
 
     @Override
     public List<Product> getAllProducts() {
-        List<Product> products = new ArrayList<>();
-        String url = baseUrl;
-        ResponseEntity<FakeStoreProductDTO[]> listFakeStoreProductDTO = restTemplate.build().getForEntity(url, FakeStoreProductDTO[].class);
-        if (listFakeStoreProductDTO.getBody() != null && listFakeStoreProductDTO.getStatusCode().equals(HttpStatusCode.valueOf(200))) {
-
-            for (FakeStoreProductDTO dto : listFakeStoreProductDTO.getBody()) {
-                products.add(mapperUtil.mapperFromFakeStoreDTOToProductEntity(dto));
-            }
-        }
-        return products;
+        return mapperUtil.mapperFromFakeStoreDTOToProductEntity(client.getAllProducts());
     }
 
     @Override
     public Product updateProduct(long id, Product product) {
-
-        String url = baseUrl + "/{id}";
-        FakeStoreProductDTO fakeStoreProductDTO = mapperUtil.mapperFromProductEntityToFakeStoreDTO(product);
-        HttpEntity<FakeStoreProductDTO> requestEntity = new HttpEntity<>(fakeStoreProductDTO);
-        ResponseEntity<FakeStoreProductDTO> updatedProduct = restTemplate.build().exchange(url, HttpMethod.PUT, requestEntity, FakeStoreProductDTO.class, id);
-        if (updatedProduct.getBody() != null && updatedProduct.getStatusCode().equals(HttpStatusCode.valueOf(200))) {
-            return mapperUtil.mapperFromFakeStoreDTOToProductEntity(updatedProduct.getBody());
-        }
-        return null;
+        return mapperUtil.mapperFromFakeStoreDTOToProductEntity(client.updateProduct(id, mapperUtil.mapperFromProductEntityToFakeStoreDTO(product)));
     }
 
     @Override
     public Product patchProduct(long id, Product product) {
-        return updateProduct(id, product);
+        return mapperUtil.mapperFromFakeStoreDTOToProductEntity(client.updateProduct(id, mapperUtil.mapperFromProductEntityToFakeStoreDTO(product)));
     }
 
     @Override
     public Product addProduct(Product product) {
-        String url = baseUrl;
-        FakeStoreProductDTO fakeStoreProductDTO = mapperUtil.mapperFromProductEntityToFakeStoreDTO(product);
-        HttpEntity<FakeStoreProductDTO> requestEntity = new HttpEntity<>(fakeStoreProductDTO);
-        ResponseEntity<FakeStoreProductDTO> responseProduct = restTemplate.build().postForEntity(url, requestEntity, FakeStoreProductDTO.class);
-        if (responseProduct.getBody() != null && responseProduct.getStatusCode().equals(HttpStatusCode.valueOf(200))) {
-            return mapperUtil.mapperFromFakeStoreDTOToProductEntity(responseProduct.getBody());
-        }
-        return null;
+        return mapperUtil.mapperFromFakeStoreDTOToProductEntity(client.addProduct(mapperUtil.mapperFromProductEntityToFakeStoreDTO(product)));
     }
 
     @Override
-    public void addProducts(List<Product> product) {
+    public void addProducts(List<Product> products) {
+        client.addProducts(mapperUtil.mapperFromProductEntityToFakeStoreDTO(products));
     }
-
 
     @Override
-    public boolean deleteProduct(long id) {
-        String url = baseUrl + "/{id}";
-        restTemplate.build().delete(url, id);
-        return true;
+    public Product deleteProduct(long id) throws ProductNotFoundException {
+        return mapperUtil.mapperFromFakeStoreDTOToProductEntity(client.deleteProduct(id));
     }
-
-
 }
 

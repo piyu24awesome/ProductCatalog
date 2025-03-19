@@ -1,5 +1,6 @@
 package org.example.productcatalogservice_feb2025.Service;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.transaction.annotation.Transactional;
 import org.example.productcatalogservice_feb2025.models.Category;
 import org.example.productcatalogservice_feb2025.models.Product;
@@ -14,8 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Primary
 @Service("dbStore")
-public class DBStoreService implements IProductService {
+public class DBStoreService implements ProductService {
     @Autowired
     ProductRepo productRepo;
     @Autowired
@@ -25,8 +27,6 @@ public class DBStoreService implements IProductService {
     @Override
     @Transactional(readOnly = true) //prevents unnecessary DB writes
     public Product getProductById(long id) {
-
-
         Optional<Product> retrieveProduct = productRepo.findById(id);
         if (retrieveProduct.isPresent()) {
             return retrieveProduct.get();
@@ -115,11 +115,15 @@ public class DBStoreService implements IProductService {
     }
 
     @Override
-    public boolean deleteProduct(long id) {
-        if (productRepo.existsById(id)) {
+    public Product deleteProduct(long id) {
+        Optional<Product> retrieveProduct = productRepo.findById(id);
+        if (retrieveProduct.isPresent()) {
             productRepo.deleteById(id);
-            return true;
+            return retrieveProduct.get();
+        } else {
+            throw new RuntimeException("Product Not Found with ID : " + id);
         }
-        return false;
+
+
     }
 }

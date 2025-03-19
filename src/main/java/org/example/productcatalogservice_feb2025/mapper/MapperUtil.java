@@ -1,14 +1,12 @@
 package org.example.productcatalogservice_feb2025.mapper;
 
-import org.example.productcatalogservice_feb2025.DTO.FakeStoreProductDTO;
+import org.example.productcatalogservice_feb2025.client.FakeStoreProductDTO;
 import org.example.productcatalogservice_feb2025.DTO.ProductDTO;
 import org.example.productcatalogservice_feb2025.models.Category;
 import org.example.productcatalogservice_feb2025.models.Product;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -77,6 +75,10 @@ public class MapperUtil {
         return product;
     }
 
+    public List<Product>mapperFromFakeStoreDTOToProductEntity(List<FakeStoreProductDTO> fakeStoreProductDTOList){
+        return fakeStoreProductDTOList.stream().map(this::mapperFromFakeStoreDTOToProductEntity).toList();
+    }
+
     public FakeStoreProductDTO mapperFromProductEntityToFakeStoreDTO(Product product) {
 
         FakeStoreProductDTO fakeStoreProductDTO = new FakeStoreProductDTO();
@@ -87,5 +89,10 @@ public class MapperUtil {
         fakeStoreProductDTO.setImage(product.getImageUrl());
 
         return fakeStoreProductDTO;
+    }
+
+
+    public List<FakeStoreProductDTO> mapperFromProductEntityToFakeStoreDTO(List<Product> products) {
+        return products.stream().map(this::mapperFromProductEntityToFakeStoreDTO).toList();
     }
 }

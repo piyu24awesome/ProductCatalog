@@ -1,20 +1,17 @@
 package org.example.productcatalogservice_feb2025.controllers;
 
 import org.example.productcatalogservice_feb2025.DTO.ProductDTO;
+import org.example.productcatalogservice_feb2025.Exception.ProductNotFoundException;
 import org.example.productcatalogservice_feb2025.Service.FakeStoreService;
-import org.example.productcatalogservice_feb2025.Service.IProductService;
+import org.example.productcatalogservice_feb2025.Service.ProductService;
 import org.example.productcatalogservice_feb2025.mapper.MapperUtil;
-import org.example.productcatalogservice_feb2025.models.Category;
 import org.example.productcatalogservice_feb2025.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.image.ImageProducer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,14 +21,12 @@ import java.util.List;
 public class ProductController {
 
 
-    @Qualifier("dbStore")
+    @Qualifier("thirdParty")
     @Autowired
-    IProductService productService;
+    ProductService productService;
 
     @Autowired
     MapperUtil mapperUtil;
-
-
 
     @GetMapping()
     public List<ProductDTO> getAllProducts() {
@@ -48,10 +43,11 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ProductDTO getProductDetailsById(@PathVariable long id) {
+    public ProductDTO getProductDetailsById(@PathVariable long id) throws ProductNotFoundException {
         if (productService instanceof FakeStoreService) {
             if (id < 1 || id > 20) {
-                throw new IllegalArgumentException("Invalid product id is input from user");
+                throw new ProductNotFoundException("Invalid product id is input from user");
+
             }
         }
         Product product = productService.getProductById(id);
@@ -127,7 +123,11 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public boolean deleteProduct(@PathVariable long id) {
-        return productService.deleteProduct(id);
+    public ProductDTO deleteProduct(@PathVariable long id) throws ProductNotFoundException {
+      Product returnedProduct= productService.deleteProduct(id);
+        if (!ObjectUtils.isEmpty(returnedProduct)) {
+            return mapperUtil.mapperFromProductToProductDTO(returnedProduct);
+        }
+        return null;
     }
 }

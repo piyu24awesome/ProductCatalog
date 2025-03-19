@@ -3,7 +3,7 @@ package org.example.productcatalogservice_feb2025.converter;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
-@Converter(autoApply = true)
+@Converter
 public class AnimalTypeConverter implements AttributeConverter<String, String> {
 
     @Override

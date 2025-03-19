@@ -1,10 +1,11 @@
 package org.example.productcatalogservice_feb2025.Service;
 
+import org.example.productcatalogservice_feb2025.Exception.ProductNotFoundException;
 import org.example.productcatalogservice_feb2025.models.Product;
 
 import java.util.List;
 
-public interface IProductService {
+public interface ProductService {
 
     public Product getProductById(long id);
 
@@ -18,5 +19,5 @@ public interface IProductService {
 
     public void addProducts(List<Product> product);
 
-    public boolean deleteProduct(long id);
+    public Product deleteProduct(long id) throws ProductNotFoundException;
 }

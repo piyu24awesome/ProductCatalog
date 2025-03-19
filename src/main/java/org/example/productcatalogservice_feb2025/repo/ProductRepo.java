@@ -26,8 +26,8 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
 
     List<Product> findByCategory_Id(Long categoryId);
 
-    @Query(value = "SELECT pname, pdesc FROM product WHERE id = :id", nativeQuery = true)
-    Object[] findRawProductById(@Param("id") Long id);
+    //@Query(value = "SELECT pname, pdesc FROM product WHERE id = :id", nativeQuery = true)
+    //Object[] findRawProductById(@Param("id") Long id);
 
 
 }

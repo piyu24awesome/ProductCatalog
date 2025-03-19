@@ -13,12 +13,12 @@ import java.util.List;
 @NoArgsConstructor
 @RequiredArgsConstructor  // ✅ Generates a constructor for fields with @NonNull
 @Entity
-public class Category extends BaseModel{
+public class Category extends BaseModel {
 
-   @NonNull
-   private String name;
-   private String description;
-//
-//   @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-//   private List<Product> products;
+    @NonNull
+    private String name;
+    private String description;
+    //
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Product> products;
 }
