@@ -30,6 +30,9 @@ public class MapperUtil {
         productDTO.setDescription(product.getDescription());
         productDTO.setImage(product.getImageUrl());
         productDTO.setCategory(product.getCategory().getName());
+        productDTO.setCreatedDate(product.getCreatedDate());
+        productDTO.setLastUpdatedAt(product.getLastUpdatedAt());
+        productDTO.setState(product.getState());
         return productDTO;
     }
 
@@ -53,6 +56,10 @@ public class MapperUtil {
         Category category1 = new Category();
         category1.setName(productDTO.getCategory());
         product.setCategory(category1);
+        product.setCreatedDate(productDTO.getCreatedDate());
+        product.setLastUpdatedAt(productDTO.getLastUpdatedAt());
+        product.setState(productDTO.getState());
+
         return product;
     }
 
@@ -72,6 +79,9 @@ public class MapperUtil {
         Category category = new Category();
         category.setName(fakeStoreProductDTO.getCategory());
         product.setCategory(category);
+        product.setCreatedDate(fakeStoreProductDTO.getCreatedDate());
+        product.setLastUpdatedAt(fakeStoreProductDTO.getLastUpdatedAt());
+        product.setState(fakeStoreProductDTO.getState());
         return product;
     }
 
@@ -87,6 +97,9 @@ public class MapperUtil {
         fakeStoreProductDTO.setDescription(product.getDescription());
         fakeStoreProductDTO.setCategory(product.getCategory().getName());
         fakeStoreProductDTO.setImage(product.getImageUrl());
+        fakeStoreProductDTO.setCreatedDate(product.getCreatedDate());
+        fakeStoreProductDTO.setLastUpdatedAt(product.getLastUpdatedAt());
+        fakeStoreProductDTO.setState(product.getState());
 
         return fakeStoreProductDTO;
     }

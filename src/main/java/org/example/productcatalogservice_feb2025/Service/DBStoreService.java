@@ -50,10 +50,26 @@ public class DBStoreService implements ProductService {
     @Override
     public Product updateProduct(long id, Product product) {
 
-        Product existingProduct = productRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Product not found with Id" + id));
-        // Ensure the product retains the same ID
-        existingProduct.setId(id);
-        return productRepo.save(existingProduct);
+        return productRepo.findById(id).map(existingProduct -> {
+
+            //fields not included in the request body will get overwritten will null or default values
+            product.setId(id);
+            product.setCreatedDate(existingProduct.getCreatedDate());
+            if (product.getState() == null) {
+                product.setState(existingProduct.getState());
+            }
+            if (product.getCategory() != null) {
+                Optional<Category> existingCategory = categoryRepo.findByName(product.getCategory().getName());
+                if (existingCategory.isPresent()) {
+                    product.setCategory(existingCategory.get());
+                } else {
+                    categoryRepo.save(product.getCategory());
+                }
+            } else {
+                product.setCategory(existingProduct.getCategory());
+            }
+            return productRepo.save(product);
+        }).orElseThrow(() -> new EntityNotFoundException("Product not found with Id" + id));
     }
 
     @Override
