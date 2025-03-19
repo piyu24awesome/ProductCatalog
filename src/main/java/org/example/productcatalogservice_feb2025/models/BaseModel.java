@@ -1,12 +1,10 @@
 package org.example.productcatalogservice_feb2025.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
-import java.util.Date;
 
 @Getter
 @Setter

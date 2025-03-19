@@ -1,7 +1,7 @@
 package org.example.productcatalogservice_feb2025.client;
 
-import org.example.productcatalogservice_feb2025.Exception.ExternalAPIException;
 import org.example.productcatalogservice_feb2025.Exception.EntityNotFoundException;
+import org.example.productcatalogservice_feb2025.Exception.ExternalAPIException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;

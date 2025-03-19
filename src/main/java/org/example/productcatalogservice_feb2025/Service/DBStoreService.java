@@ -1,16 +1,16 @@
 package org.example.productcatalogservice_feb2025.Service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.productcatalogservice_feb2025.Exception.EntityNotFoundException;
 import org.example.productcatalogservice_feb2025.Exception.EntityListEmptyException;
-import org.springframework.context.annotation.Primary;
-import org.springframework.transaction.annotation.Transactional;
+import org.example.productcatalogservice_feb2025.Exception.EntityNotFoundException;
 import org.example.productcatalogservice_feb2025.models.Category;
 import org.example.productcatalogservice_feb2025.models.Product;
 import org.example.productcatalogservice_feb2025.repo.CategoryRepo;
 import org.example.productcatalogservice_feb2025.repo.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.util.HashMap;

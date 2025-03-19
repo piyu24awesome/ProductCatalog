@@ -1,7 +1,7 @@
 package org.example.productcatalogservice_feb2025.Service;
 
-import org.example.productcatalogservice_feb2025.client.ThirdPartyProductServiceClient;
 import org.example.productcatalogservice_feb2025.Exception.EntityNotFoundException;
+import org.example.productcatalogservice_feb2025.client.ThirdPartyProductServiceClient;
 import org.example.productcatalogservice_feb2025.mapper.MapperUtil;
 import org.example.productcatalogservice_feb2025.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;

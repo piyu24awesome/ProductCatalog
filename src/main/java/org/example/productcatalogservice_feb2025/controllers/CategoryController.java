@@ -3,7 +3,6 @@ package org.example.productcatalogservice_feb2025.controllers;
 import org.example.productcatalogservice_feb2025.Service.CategoryService;
 import org.example.productcatalogservice_feb2025.models.Category;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,11 +15,12 @@ public class CategoryController {
     @DeleteMapping("/{id}")
     public boolean deleteCategory(@PathVariable long id) {
 
-      return   categoryService.deleteCategory(id);
+        return categoryService.deleteCategory(id);
 
     }
+
     @GetMapping("/{id}")
     public Category getCategory(@PathVariable long id) {
         return categoryService.getCategory(id);
     }
- }
+}

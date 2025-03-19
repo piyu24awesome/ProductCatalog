@@ -1,34 +1,30 @@
 package org.example.productcatalogservice_feb2025.models;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.*;
-import org.springframework.stereotype.Component;
-
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name ="product")
+@Table(name = "product")
 public class Product extends BaseModel {
 
-    @Column( name = "pname",  nullable = false)
+    @Column(name = "pname", nullable = false)
     private String name;
-    @Column(name="pdesc", length = 10000)
+    @Column(name = "pdesc", length = 10000)
     private String description;
-    @Column(name ="pimage_url")
+    @Column(name = "pimage_url")
     private String imageUrl;
-    @Column(name ="price", nullable = false)
+    @Column(name = "price", nullable = false)
     private double price;
-    @Column(name= "is_prime")
+    @Column(name = "is_prime")
     private Boolean isPrime;
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 }

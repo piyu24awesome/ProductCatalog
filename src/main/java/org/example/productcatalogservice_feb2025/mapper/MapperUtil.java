@@ -1,7 +1,7 @@
 package org.example.productcatalogservice_feb2025.mapper;
 
-import org.example.productcatalogservice_feb2025.client.FakeStoreProductDTO;
 import org.example.productcatalogservice_feb2025.DTO.ProductDTO;
+import org.example.productcatalogservice_feb2025.client.FakeStoreProductDTO;
 import org.example.productcatalogservice_feb2025.models.Category;
 import org.example.productcatalogservice_feb2025.models.Product;
 import org.springframework.stereotype.Component;
