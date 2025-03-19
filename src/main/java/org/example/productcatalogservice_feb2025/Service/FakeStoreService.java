@@ -1,8 +1,7 @@
 package org.example.productcatalogservice_feb2025.Service;
 
-import org.example.productcatalogservice_feb2025.DTO.ProductDTO;
 import org.example.productcatalogservice_feb2025.client.ThirdPartyProductServiceClient;
-import org.example.productcatalogservice_feb2025.Exception.ProductNotFoundException;
+import org.example.productcatalogservice_feb2025.Exception.EntityNotFoundException;
 import org.example.productcatalogservice_feb2025.mapper.MapperUtil;
 import org.example.productcatalogservice_feb2025.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +49,7 @@ public class FakeStoreService implements ProductService {
     }
 
     @Override
-    public Product deleteProduct(long id) throws ProductNotFoundException {
+    public Product deleteProduct(long id) throws EntityNotFoundException {
         return mapperUtil.mapperFromFakeStoreDTOToProductEntity(client.deleteProduct(id));
     }
 }

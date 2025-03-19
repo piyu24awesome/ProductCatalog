@@ -1,6 +1,6 @@
 package org.example.productcatalogservice_feb2025.Service;
 
-import org.example.productcatalogservice_feb2025.Exception.ProductNotFoundException;
+import org.example.productcatalogservice_feb2025.Exception.EntityNotFoundException;
 import org.example.productcatalogservice_feb2025.models.Product;
 
 import java.util.List;
@@ -19,5 +19,5 @@ public interface ProductService {
 
     public void addProducts(List<Product> product);
 
-    public Product deleteProduct(long id) throws ProductNotFoundException;
+    public Product deleteProduct(long id) throws EntityNotFoundException;
 }

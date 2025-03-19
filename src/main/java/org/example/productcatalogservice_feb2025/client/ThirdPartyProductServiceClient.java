@@ -1,6 +1,6 @@
 package org.example.productcatalogservice_feb2025.client;
 
-import org.example.productcatalogservice_feb2025.Exception.ProductNotFoundException;
+import org.example.productcatalogservice_feb2025.Exception.EntityNotFoundException;
 
 import java.util.List;
 
@@ -19,5 +19,5 @@ public interface ThirdPartyProductServiceClient {
 
     public void addProducts(List<FakeStoreProductDTO> product);
 
-    public FakeStoreProductDTO deleteProduct(long id) throws ProductNotFoundException;
+    public FakeStoreProductDTO deleteProduct(long id) throws EntityNotFoundException;
 }

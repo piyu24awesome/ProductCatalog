@@ -1,14 +1,12 @@
 package org.example.productcatalogservice_feb2025.client;
 
 import org.example.productcatalogservice_feb2025.Exception.ExternalAPIException;
-import org.example.productcatalogservice_feb2025.Exception.ProductNotFoundException;
-import org.example.productcatalogservice_feb2025.mapper.MapperUtil;
+import org.example.productcatalogservice_feb2025.Exception.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
@@ -103,7 +101,7 @@ public class FakeStoreProductServiceClient implements ThirdPartyProductServiceCl
     }
 
     @Override
-    public FakeStoreProductDTO deleteProduct(long id) throws ProductNotFoundException {
+    public FakeStoreProductDTO deleteProduct(long id) throws EntityNotFoundException {
         String url = getProductByIdUrl(id);
         try {
             ResponseEntity<FakeStoreProductDTO> responseProduct = restTemplateBuilder.build().exchange(url, HttpMethod.DELETE, null, FakeStoreProductDTO.class, id);

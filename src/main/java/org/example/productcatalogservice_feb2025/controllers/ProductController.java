@@ -1,7 +1,7 @@
 package org.example.productcatalogservice_feb2025.controllers;
 
 import org.example.productcatalogservice_feb2025.DTO.ProductDTO;
-import org.example.productcatalogservice_feb2025.Exception.ProductNotFoundException;
+import org.example.productcatalogservice_feb2025.Exception.EntityNotFoundException;
 import org.example.productcatalogservice_feb2025.Service.FakeStoreService;
 import org.example.productcatalogservice_feb2025.Service.ProductService;
 import org.example.productcatalogservice_feb2025.mapper.MapperUtil;
@@ -21,7 +21,7 @@ import java.util.List;
 public class ProductController {
 
 
-    @Qualifier("thirdParty")
+    @Qualifier("dbStore")
     @Autowired
     ProductService productService;
 
@@ -43,10 +43,10 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ProductDTO getProductDetailsById(@PathVariable long id) throws ProductNotFoundException {
+    public ProductDTO getProductDetailsById(@PathVariable long id) throws EntityNotFoundException {
         if (productService instanceof FakeStoreService) {
             if (id < 1 || id > 20) {
-                throw new ProductNotFoundException("Invalid product id is input from user");
+                throw new EntityNotFoundException("Invalid product id is input from user");
 
             }
         }
@@ -123,7 +123,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ProductDTO deleteProduct(@PathVariable long id) throws ProductNotFoundException {
+    public ProductDTO deleteProduct(@PathVariable long id) throws EntityNotFoundException {
       Product returnedProduct= productService.deleteProduct(id);
         if (!ObjectUtils.isEmpty(returnedProduct)) {
             return mapperUtil.mapperFromProductToProductDTO(returnedProduct);

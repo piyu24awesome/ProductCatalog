@@ -1,5 +1,8 @@
 package org.example.productcatalogservice_feb2025.Service;
 
+import lombok.extern.slf4j.Slf4j;
+import org.example.productcatalogservice_feb2025.Exception.EntityNotFoundException;
+import org.example.productcatalogservice_feb2025.Exception.ProductListEmptyException;
 import org.springframework.context.annotation.Primary;
 import org.springframework.transaction.annotation.Transactional;
 import org.example.productcatalogservice_feb2025.models.Category;
@@ -15,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @Primary
 @Service("dbStore")
 public class DBStoreService implements ProductService {
@@ -27,50 +31,49 @@ public class DBStoreService implements ProductService {
     @Override
     @Transactional(readOnly = true) //prevents unnecessary DB writes
     public Product getProductById(long id) {
-        Optional<Product> retrieveProduct = productRepo.findById(id);
-        if (retrieveProduct.isPresent()) {
-            return retrieveProduct.get();
-        } else {
-            throw new RuntimeException("Product Not Found with ID : " + id);
-        }
+        return productRepo.findById(id).orElseThrow(() -> {
+            log.error("Product with ID {} not found", id);
+            return new EntityNotFoundException("Product Not Found with ID: " + id);
+        });
     }
 
     @Override
     public List<Product> getAllProducts() {
-        return productRepo.findAll();
+        List<Product> products = productRepo.findAll();
+        if (products.isEmpty()) {
+            log.info("No products found in DB");
+            throw new ProductListEmptyException("No products found in DB");
+        }
+        return products;
     }
 
     @Override
     public Product updateProduct(long id, Product product) {
-        if (productRepo.existsById(id)) {
-            return productRepo.save(product);
-        } else {
-            throw new RuntimeException("Product not found with Id" + id);
-        }
+
+        Product existingProduct = productRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Product not found with Id" + id));
+        // Ensure the product retains the same ID
+        existingProduct.setId(id);
+        return productRepo.save(existingProduct);
     }
 
     @Override
     public Product patchProduct(long id, Product productFromDTO) {
 
         //direct repo call with specific query update
-        Optional<Product> retrievedProduct = productRepo.findById(id);
-        if (retrievedProduct.isPresent()) {
-            Product prod = retrievedProduct.get();
-            if (productFromDTO.getDescription() != null) {
-                prod.setDescription(productFromDTO.getDescription());
-            }
-            if (productFromDTO.getCategory() != null) {
-                prod.setCategory(productFromDTO.getCategory());
-            }
-            if (!ObjectUtils.isEmpty(productFromDTO) && !ObjectUtils.isEmpty(productFromDTO.getPrice())) {
-                prod.setPrice(productFromDTO.getPrice());
-            }
-            return productRepo.save(prod);
-        } else {
-            throw new RuntimeException("Product not found with Id" + id);
-        }
+        Product prod = productRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Product not found with Id" + id));
 
+        if (productFromDTO.getDescription() != null) {
+            prod.setDescription(productFromDTO.getDescription());
+        }
+        if (productFromDTO.getCategory() != null) {
+            prod.setCategory(productFromDTO.getCategory());
+        }
+        if (!ObjectUtils.isEmpty(productFromDTO) && !ObjectUtils.isEmpty(productFromDTO.getPrice())) {
+            prod.setPrice(productFromDTO.getPrice());
+        }
+        return productRepo.save(prod);
     }
+
 
     @Override
     public Product addProduct(Product product) {
@@ -94,7 +97,7 @@ public class DBStoreService implements ProductService {
     @Override
     public void addProducts(List<Product> products) {
         if (ObjectUtils.isEmpty(products)) {
-            throw new RuntimeException("Product list is empty");
+            throw new ProductListEmptyException("Product list is empty");
         }
         Map<String, Category> categoryCache = new HashMap<>();
 
@@ -107,7 +110,6 @@ public class DBStoreService implements ProductService {
                         category.getName(),
                         name -> categoryRepo.findByName(name).orElseGet(() -> categoryRepo.save(new Category(name)))
                 );
-
                 product.setCategory(category);
             }
         }
@@ -116,14 +118,15 @@ public class DBStoreService implements ProductService {
 
     @Override
     public Product deleteProduct(long id) {
-        Optional<Product> retrieveProduct = productRepo.findById(id);
-        if (retrieveProduct.isPresent()) {
-            productRepo.deleteById(id);
-            return retrieveProduct.get();
-        } else {
-            throw new RuntimeException("Product Not Found with ID : " + id);
-        }
+        // Fetch the product first
+        Product product = productRepo.findById(id).orElseThrow(() -> {
+            log.error("Delete failed: Product with ID {} not found", id);
+            return new EntityNotFoundException("Product Not Found with ID: " + id);
 
-
+        });
+        // Delete the product
+        productRepo.delete(product);
+        // Return the deleted product
+        return product;
     }
 }
